@@ -6,7 +6,10 @@ const Navbar = () => {
   const { logout, authUser } = useAuthStore();
 
   return (
-    <header className="bg-base-100 border-b border-base-300 fixed w-full top-0 z-40 backdrop-blur-lg bg-base-100/80">
+    <header
+      className="bg-base-100 border-b border-base-300 fixed w-full top-0 z-40
+    backdrop-blur-lg bg-base-100/80"
+    >
       <div className="container mx-auto px-4 h-16">
         <div className="flex items-center justify-between h-full">
           <div className="flex items-center gap-8">
@@ -19,7 +22,13 @@ const Navbar = () => {
           </div>
 
           <div className="flex items-center gap-2">
-            <Link to={"/settings"} className={`btn btn-sm gap-2 transition-colors`}>
+            <Link
+              to={"/settings"}
+              className={`
+              btn btn-sm gap-2 transition-colors
+
+              `}
+            >
               <Settings className="w-4 h-4" />
               <span className="hidden sm:inline">Settings</span>
             </Link>
