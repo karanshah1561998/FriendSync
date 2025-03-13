@@ -59,13 +59,13 @@ export const useAuthStore = create((set, get) => ({
 
     logout: async () => {
         try {
-            await axiosInstance.post("/auth/logout");
+            await axiosInstance.post("/auth/logout", {}, { withCredentials: true });
             set({ authUser: null });
             toast.success("Logged out successfully");
             get().disconnectSocket();
-            // window.location.reload();
         } catch (error) {
-            toast.error(error.response.data.message);
+            console.error("Error logging out:", error);
+            toast.error(error.response?.data?.message || "Failed to log out.");
         }
     },
 
@@ -80,6 +80,17 @@ export const useAuthStore = create((set, get) => ({
             toast.error(error.response.data.message);
         } finally {
             set({ isUpdatingProfile: false });
+        }
+    },
+
+    deleteProfile: async () => {
+        try {
+            await axiosInstance.delete("/auth/delete-profile");
+            set({ authUser: null });
+            toast.success("Profile deleted successfully");
+        } catch (error) {
+            console.error("Error deleting profile:", error);
+            toast.error("Failed to delete profile.");
         }
     },
 

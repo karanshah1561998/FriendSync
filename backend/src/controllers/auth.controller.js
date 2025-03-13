@@ -50,6 +50,7 @@ export const signup = async (req, res) => {
                 email: newUser.email,
                 profilePic: newUser.profilePic,
                 authProvider: newUser.authProvider,
+                createdAt: newUser.createdAt,
             });
         } else {
             res.status(400).json({ message: "Invalid User Data" });
@@ -90,6 +91,7 @@ export const login = async (req, res) => {
             email: user.email,
             profilePic: user.profilePic,
             authProvider: user.authProvider,
+            createdAt: user.createdAt,
         })
     } catch (error) {
         console.log("Error In Login Controller", error.message);
@@ -100,7 +102,7 @@ export const login = async (req, res) => {
 export const logout = (req, res) => {
     try {
         res.cookie("jwt", "", { maxAge: 0 });
-        res.status(200).json({ message: "Logged Out Successfully" });
+        res.status(200).json({ message: "Logged out successfully" });
     } catch (error) {
         console.log("Error in logout controller", error.message);
         res.status(500).json({ message: "Internal Server Error" });
@@ -134,6 +136,23 @@ export const updateProfile = async (req, res) => {
     }
 };
 
+export const deleteProfile = async (req, res) => {
+    try {
+        if (!req.user) {
+            return res.status(401).json({ message: "Unauthorized" });
+        }
+
+        const userId = req.user._id;
+        await User.findByIdAndDelete(userId);
+
+        res.cookie("jwt", "", { httpOnly: true, expires: new Date(0) });
+        res.status(200).json({ message: "Profile deleted successfully" });
+    } catch (error) {
+        console.log("Error in DeleteProfile Controller: ", error.message);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+};
+
 export const checkAuth = (req, res) => {
     try {
         if (!req.user) {
@@ -145,9 +164,10 @@ export const checkAuth = (req, res) => {
             email: req.user.email,
             profilePic: req.user.profilePic,
             authProvider: req.user.authProvider,
+            createdAt: req.user.createdAt,
         });
     } catch (error) {
         console.log("Error In CheckAuth Controller", error.message);
         res.status(500).json({ message: "Internal Server Error" });
     }
-}
+};
