@@ -3,6 +3,13 @@ import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import cloudinary from "../lib/cloudinary.js";
 
+const checkOAuthProvider = (user, provider) => {
+    if (user?.authProvider && user.authProvider !== "local") {
+        return `Email already registered via ${user.authProvider}. Use ${user.authProvider} Sign-In.`;
+    }
+    return null;
+};
+
 export const signup = async (req, res) => {
     const { fullName, email, password } = req.body;
     try {
@@ -13,8 +20,16 @@ export const signup = async (req, res) => {
             return res.status(400).json({ message: "Password Must Be At Least 8 Characters" });
         }
 
-        const user = await User.findOne({ email });
-        if (user) return res.status(400).json({ message: "Email Already Exists" });
+        const existingUser = await User.findOne({ email });
+
+        const oauthMessage = checkOAuthProvider(existingUser);
+        if (oauthMessage) {
+            return res.status(400).json({ message: oauthMessage });
+        }
+
+        if (existingUser) {
+            return res.status(400).json({ message: "Email already exists." });
+        }
 
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
@@ -23,6 +38,7 @@ export const signup = async (req, res) => {
             fullName,
             email,
             password: hashedPassword,
+            authProvider: "local",
         });
         if (newUser) {
             generateToken(newUser._id, res);
@@ -33,6 +49,7 @@ export const signup = async (req, res) => {
                 fullName: newUser.fullName,
                 email: newUser.email,
                 profilePic: newUser.profilePic,
+                authProvider: newUser.authProvider,
             });
         } else {
             res.status(400).json({ message: "Invalid User Data" });
@@ -48,12 +65,22 @@ export const login = async (req, res) => {
     try {
         const user = await User.findOne({email});
         if(!user){
-            return res.status(400).json({message: "Invalid Credentials"});
+            return res.status(400).json({message: "User doesn't exist with this email"});
         }
 
-        const isPasswordCorrect = await bcrypt.compare(password, user.password);
-        if(!isPasswordCorrect){
-            return res.status(400).json({message: "Invalid Credentials"});
+        // Prevent login with password if the user registered via OAuth
+        const oauthMessage = checkOAuthProvider(user);
+        if (oauthMessage) {
+            return res.status(400).json({ message: oauthMessage });
+        }
+
+        if (!password) {
+            return res.status(400).json({ message: "Password is required." });
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: "Invalid credentials." });
         }
 
         generateToken(user._id, res);
@@ -61,7 +88,8 @@ export const login = async (req, res) => {
             _id: user._id,
             fullName: user.fullName,
             email: user.email,
-            profilePic: user.profilePic
+            profilePic: user.profilePic,
+            authProvider: user.authProvider,
         })
     } catch (error) {
         console.log("Error In Login Controller", error.message);
@@ -81,8 +109,13 @@ export const logout = (req, res) => {
 
 export const updateProfile = async (req, res) => {
     try {
+        if (!req.user) {
+            return res.status(401).json({ message: "Unauthorized" });
+        }
+
         const { profilePic } = req.body;
         const userId = req.user._id;
+
         if(!profilePic){
             return res.status(400).json({message: "Profile Pic Is Required"});
         }
@@ -103,7 +136,16 @@ export const updateProfile = async (req, res) => {
 
 export const checkAuth = (req, res) => {
     try {
-        res.status(200).json(req.user);
+        if (!req.user) {
+            return res.status(401).json({ message: "Not Authenticated" });
+        }
+        res.status(200).json({
+            _id: req.user._id,
+            fullName: req.user.fullName,
+            email: req.user.email,
+            profilePic: req.user.profilePic,
+            authProvider: req.user.authProvider,
+        });
     } catch (error) {
         console.log("Error In CheckAuth Controller", error.message);
         res.status(500).json({ message: "Internal Server Error" });

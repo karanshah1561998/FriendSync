@@ -2,6 +2,10 @@ import { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import { Link } from "react-router-dom";
 import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare } from "lucide-react";
+import toast from "react-hot-toast";
+import googleIcon from "../assets/google-icon.png"; // Ensure you have icons
+import facebookIcon from "../assets/facebook-icon.png";
+import githubIcon from "../assets/github-icon.png";
 
 const LoginPage = () => {
 
@@ -10,10 +14,15 @@ const LoginPage = () => {
         email: "",
         password: "",
     });
-    const { login, isLoggingIn } = useAuthStore();
+    const { login, isLoggingIn, handleOAuthRedirect } = useAuthStore();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!formData.email.trim() || !formData.password.trim()) {
+            return toast.error("Email and Password are required");;
+        }
+
         login(formData);
     };
 
@@ -95,6 +104,35 @@ const LoginPage = () => {
                         )}
                     </button>
                 </form>
+
+                {/* Divider with OR */}
+                <div className="relative flex py-5 items-center">
+                    <div className="flex-grow border-t border-gray-300"></div>
+                    <span className="px-4 text-gray-400 text-sm">OR</span>
+                    <div className="flex-grow border-t border-gray-300"></div>
+                </div>
+
+                {/* OAuth Buttons as Icons */}
+                <div className="flex justify-center gap-4 mb-6">
+                    <button
+                        onClick={() => handleOAuthRedirect("google")}
+                        className="p-3 bg-white shadow-md rounded-full hover:scale-110 transition"
+                    >
+                        <img src={googleIcon} alt="Google" className="w-6 h-6" />
+                    </button>
+                    <button
+                        onClick={() => handleOAuthRedirect("facebook")}
+                        className="p-3 bg-white shadow-md rounded-full hover:scale-110 transition"
+                    >
+                        <img src={facebookIcon} alt="Facebook" className="w-6 h-6" />
+                    </button>
+                    <button
+                        onClick={() => handleOAuthRedirect("github")}
+                        className="p-3 bg-white shadow-md rounded-full hover:scale-110 transition"
+                    >
+                        <img src={githubIcon} alt="GitHub" className="w-6 h-6" />
+                    </button>
+                </div>
 
                 {/* Don't have an account? Create account */}
                 <div className="text-center mt-5">

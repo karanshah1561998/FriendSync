@@ -13,12 +13,20 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
-      minlength: 8,
+      minlength: 8, // Not required for OAuth users
     },
     profilePic: {
       type: String,
       default: "",
+    },
+    authProvider: {
+      type: String,
+      enum: ["local", "google", "facebook", "github"],
+      default: "local",
+    },
+    authProviderId: {
+      type: String, // Stores unique OAuth provider ID
+      default: null,
     },
   },
   { timestamps: true }

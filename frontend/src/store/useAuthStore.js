@@ -83,6 +83,22 @@ export const useAuthStore = create((set, get) => ({
         }
     },
 
+    handleOAuthRedirect: async (provider) => {
+        try {
+            const response = await axiosInstance.get(`/auth/${provider}/redirect`);
+
+            if (response.data.redirectUrl) {
+                window.location.assign(response.data.redirectUrl);
+            } else {
+                toast.error(`${provider} login failed`);
+            }
+        } catch (error) {
+            console.error(`${provider} OAuth Error:`, error);
+            toast.error(`${provider} login failed`);
+        }
+    },
+
+
     connectSocket: () => {
         const { authUser } = get();
         if (!authUser || get().socket?.connected) return;
