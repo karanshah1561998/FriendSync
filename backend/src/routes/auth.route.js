@@ -1,5 +1,5 @@
 import express from "express";
-import { checkAuth, updateProfile, login, logout, signup } from "../controllers/auth.controller.js";
+import { signup, login, checkAuth, updateProfile, logout } from "../controllers/auth.controller.js";
 import { protectRoute } from "../middleware/auth.middleware.js";
 import passport from "passport";
 import { generateToken } from "../lib/utils.js";
@@ -76,6 +76,5 @@ router.get("/:provider/redirect", (req, res) => {
     const authUrl = `${CONFIG.SERVER_URL}/api/auth/${provider}`;
     res.json({ redirectUrl: authUrl });
 });
-
 
 export default router;
