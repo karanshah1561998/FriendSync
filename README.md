@@ -33,7 +33,7 @@ Ensure you have the following installed:
 ### Setup
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/yourusername/friendsync.git
+   git clone https://github.com/karanshah1561998/friendsync.git
    cd friendsync
 
 2. **Install dependencies:**
@@ -116,7 +116,7 @@ Ensure you have the following installed:
 
 ## Deployment
 
-### Frontend (Render)
+### Frontend & Backend (Render)
 1. Push your frontend code to GitHub.
 2. Connect your repository to **Render**.
 3. Set **environment variables** in Netlify settings.
