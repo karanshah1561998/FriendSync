@@ -1,6 +1,6 @@
 import { useChatStore } from "../store/useChatStore";
 import { useEffect, useRef } from "react";
-import { useAuthStore } from "../store/useAuthStore"; // ✅ Import Auth Store
+import { useAuthStore } from "../store/useAuthStore";
 import ChatHeader from "./ChatHeader";
 import MessageInput from "./MessageInput";
 import MessageSkeleton from "./skeletons/MessageSkeleton";
@@ -15,7 +15,7 @@ const ChatContainer = () => {
     subscribeToMessages,
     unsubscribeFromMessages,
   } = useChatStore();
-  const { authUser } = useAuthStore(); // ✅ Remove unnecessary `typingUsers`
+  const { authUser } = useAuthStore();
   const messageEndRef = useRef(null);
 
   useEffect(() => {
