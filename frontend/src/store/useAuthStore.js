@@ -12,6 +12,7 @@ export const useAuthStore = create((set, get) => ({
     isUpdatingProfile: false,
     onlineUsers: [],
     socket: null,
+    typingUsers: {},
 
     isCheckingAuth: true,
 
@@ -109,6 +110,16 @@ export const useAuthStore = create((set, get) => ({
         }
     },
 
+    sendTypingEvent: (receiverId, stopTyping = false) => {
+        const { authUser, socket } = get();
+        if (!authUser || !socket) return;
+
+        socket.emit(stopTyping ? "stopTyping" : "typing", {
+            senderId: authUser._id,
+            receiverId
+        });
+    },
+
     connectSocket: () => {
         const { authUser } = get();
         if (!authUser || get().socket?.connected) return;
@@ -125,6 +136,22 @@ export const useAuthStore = create((set, get) => ({
         socket.on("getOnlineUsers", (userIds) => {
             set({ onlineUsers: userIds });
         });
+
+        socket.on("userTyping", ({ senderId }) => {
+            set((state) => ({
+                typingUsers: { ...state.typingUsers, [senderId]: true },
+            }));
+        });
+
+        socket.on("userStoppedTyping", ({ senderId }) => {
+            set((state) => {
+                const updatedTypingUsers = { ...state.typingUsers };
+                delete updatedTypingUsers[senderId];
+                return { typingUsers: updatedTypingUsers };
+            });
+        });
+
+
     },
 
     disconnectSocket: () => {

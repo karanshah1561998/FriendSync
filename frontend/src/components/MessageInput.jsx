@@ -1,13 +1,26 @@
 import { useRef, useState } from "react";
 import { useChatStore } from "../store/useChatStore";
+import { useAuthStore } from "../store/useAuthStore";
 import { Image, Send, X } from "lucide-react";
 import toast from "react-hot-toast";
 
-const MessageInput = () => {
+const MessageInput = ({ receiverId }) => {
   const [text, setText] = useState("");
   const [imagePreview, setImagePreview] = useState(null);
   const fileInputRef = useRef(null);
   const { sendMessage } = useChatStore();
+  const { sendTypingEvent } = useAuthStore();
+
+  let typingTimeout;
+
+  const handleTyping = () => {
+    sendTypingEvent(receiverId);
+
+    clearTimeout(typingTimeout);
+    typingTimeout = setTimeout(() => {
+        sendTypingEvent(receiverId, true);
+    }, 2000);
+  };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -37,6 +50,8 @@ const MessageInput = () => {
         text: text.trim(),
         image: imagePreview,
       });
+
+      sendTypingEvent(receiverId);
 
       // Clear form
       setText("");
@@ -76,7 +91,10 @@ const MessageInput = () => {
             className="w-full input input-bordered rounded-lg input-sm sm:input-md"
             placeholder="Type a message..."
             value={text}
-            onChange={(e) => setText(e.target.value)}
+            onChange={(e) => {
+              setText(e.target.value);
+              handleTyping();
+            }}
           />
           <input
             type="file"

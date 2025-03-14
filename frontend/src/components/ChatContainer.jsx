@@ -1,9 +1,9 @@
 import { useChatStore } from "../store/useChatStore";
 import { useEffect, useRef } from "react";
+import { useAuthStore } from "../store/useAuthStore"; // ✅ Import Auth Store
 import ChatHeader from "./ChatHeader";
 import MessageInput from "./MessageInput";
 import MessageSkeleton from "./skeletons/MessageSkeleton";
-import { useAuthStore } from "../store/useAuthStore";
 import { formatMessageTime } from "../lib/utils";
 
 const ChatContainer = () => {
@@ -15,13 +15,16 @@ const ChatContainer = () => {
     subscribeToMessages,
     unsubscribeFromMessages,
   } = useChatStore();
-  const { authUser } = useAuthStore();
+  const { authUser } = useAuthStore(); // ✅ Remove unnecessary `typingUsers`
   const messageEndRef = useRef(null);
 
   useEffect(() => {
     getMessages(selectedUser._id);
     subscribeToMessages();
-    return () => unsubscribeFromMessages();
+
+    return () => {
+      unsubscribeFromMessages();
+    };
   }, [selectedUser._id, getMessages, subscribeToMessages, unsubscribeFromMessages]);
 
   useEffect(() => {
@@ -35,7 +38,7 @@ const ChatContainer = () => {
       <div className="flex-1 flex flex-col overflow-auto">
         <ChatHeader />
         <MessageSkeleton />
-        <MessageInput />
+        <MessageInput receiverId={selectedUser._id} />
       </div>
     );
   }
@@ -51,7 +54,7 @@ const ChatContainer = () => {
             className={`chat ${message.senderId === authUser._id ? "chat-end" : "chat-start"}`}
             ref={messageEndRef}
           >
-            <div className=" chat-image avatar">
+            <div className="chat-image avatar">
               <div className="size-10 rounded-full border">
                 <img
                   src={
@@ -80,9 +83,11 @@ const ChatContainer = () => {
             </div>
           </div>
         ))}
+
+        <div ref={messageEndRef}></div>
       </div>
 
-      <MessageInput />
+      <MessageInput receiverId={selectedUser._id} />
     </div>
   );
 };
