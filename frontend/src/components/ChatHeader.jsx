@@ -6,8 +6,8 @@ const ChatHeader = () => {
   const { selectedUser, setSelectedUser } = useChatStore();
   const { onlineUsers, typingUsers } = useAuthStore();
 
-  const isOnline = onlineUsers.includes(selectedUser._id);
-  const isTyping = Object.keys(typingUsers).includes(selectedUser._id);
+  const isOnline = selectedUser ? onlineUsers.includes(selectedUser._id) : false;
+  const isTyping = selectedUser ? Object.keys(typingUsers).includes(selectedUser._id) : false;
 
   return (
     <div className="p-2.5 border-b border-base-300">
