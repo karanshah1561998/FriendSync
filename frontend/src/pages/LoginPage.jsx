@@ -113,22 +113,22 @@ const LoginPage = () => {
                 </div>
 
                 {/* OAuth Buttons as Icons */}
-                <div className="flex justify-center gap-4 mb-6">
+                <div className="flex justify-center gap-16 mb-6">
                     <button
                         onClick={() => handleOAuthRedirect("google")}
-                        className="p-3 bg-white shadow-md rounded-full hover:scale-110 transition"
+                        className="p-3 bg-white shadow-md rounded hover:scale-110 transition"
                     >
                         <img src={googleIcon} alt="Google" className="w-6 h-6" />
                     </button>
                     <button
                         onClick={() => handleOAuthRedirect("facebook")}
-                        className="p-3 bg-white shadow-md rounded-full hover:scale-110 transition"
+                        className="p-3 bg-white shadow-md rounded hover:scale-110 transition"
                     >
                         <img src={facebookIcon} alt="Facebook" className="w-6 h-6" />
                     </button>
                     <button
                         onClick={() => handleOAuthRedirect("github")}
-                        className="p-3 bg-white shadow-md rounded-full hover:scale-110 transition"
+                        className="p-3 bg-white shadow-md rounded hover:scale-110 transition"
                     >
                         <img src={githubIcon} alt="GitHub" className="w-6 h-6" />
                     </button>

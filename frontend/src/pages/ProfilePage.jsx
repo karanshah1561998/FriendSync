@@ -37,7 +37,7 @@ const ProfilePage = () => {
     return (
         <div className="h-screen flex justify-center items-center px-4">
             <div className="w-full max-w-xl shadow-md rounded-xl p-6 space-y-8 mt-10">
-                <div className="bg-base-300 h-5/6 rounded-xl p-6 space-y-8">
+                <div className="bg-base-300 rounded-xl p-6 space-y-8">
                     <div className="text-center">
                         <h1 className="text-2xl font-semibold ">Profile</h1>
                         <p className="mt-2">Your profile information</p>
