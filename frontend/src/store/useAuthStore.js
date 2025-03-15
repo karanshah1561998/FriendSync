@@ -11,6 +11,7 @@ export const useAuthStore = create((set, get) => ({
     isLoggingIn: false,
     isUpdatingProfile: false,
     onlineUsers: [],
+    lastSeenUsers: {},
     socket: null,
     typingUsers: {},
 
@@ -120,6 +121,19 @@ export const useAuthStore = create((set, get) => ({
         });
     },
 
+    getLastSeen: async (userId) => {
+        try {
+            if (!userId || get().lastSeenUsers[userId]) return;
+
+            const response = await axiosInstance.get(`/auth/last-seen/${userId}`);
+            set((state) => ({
+                lastSeenUsers: { ...state.lastSeenUsers, [userId]: response.data.lastSeen }
+            }));
+        } catch (error) {
+            console.log("Error fetching last seen:", error.response?.data || error.message);
+        }
+    },
+
     connectSocket: () => {
         const { authUser } = get();
         if (!authUser || get().socket?.connected) return;
@@ -151,7 +165,11 @@ export const useAuthStore = create((set, get) => ({
             });
         });
 
-
+        socket.on("userDisconnected", ({ userId, lastSeen }) => {
+            set((state) => ({
+                lastSeenUsers: { ...state.lastSeenUsers, [userId]: lastSeen },
+            }));
+        });
     },
 
     disconnectSocket: () => {

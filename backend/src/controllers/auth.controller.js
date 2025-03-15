@@ -177,3 +177,19 @@ export const checkAuth = (req, res) => {
         res.status(500).json({ message: "Internal Server Error" });
     }
 };
+
+export const getLastSeen = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const user = await User.findById(id).select("lastSeen");
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.status(200).json({ lastSeen: user.lastSeen });
+    } catch (error) {
+        console.error("Error fetching last seen:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+};

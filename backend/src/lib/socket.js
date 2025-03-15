@@ -1,6 +1,7 @@
 import { Server } from "socket.io";
 import http from "http";
 import express from "express";
+import User from "../models/user.model.js";
 
 const app = express();
 const server = http.createServer(app);
@@ -20,10 +21,13 @@ const userSocketMap = {}; // {userId: socketId}
 
 io.on("connection", (socket) => {
     const userId = socket.handshake.query.userId;
-    if (userId) userSocketMap[userId] = socket.id;
 
-    // io.emit() is used to send events to all the connected clients
-    io.emit("getOnlineUsers", Object.keys(userSocketMap));
+    if (userId) {
+        userSocketMap[userId] = socket.id;
+
+        // Emit updated online users list
+        io.emit("getOnlineUsers", Object.keys(userSocketMap));
+    }
 
     socket.on("typing", ({ senderId, receiverId }) => {
         const receiverSocketId = getReceiverSocketId(receiverId);
@@ -40,10 +44,14 @@ io.on("connection", (socket) => {
     });
 
 
-    socket.on("disconnect", () => {
+    socket.on("disconnect", async () => {
         if (userId) {
             delete userSocketMap[userId];
+
+            await User.findByIdAndUpdate(userId, { lastSeen: new Date() });
+
             io.emit("getOnlineUsers", Object.keys(userSocketMap));
+            io.emit("userDisconnected", { userId, lastSeen: new Date() });
         }
     });
 });

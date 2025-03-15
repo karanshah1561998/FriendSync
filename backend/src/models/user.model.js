@@ -28,6 +28,10 @@ const userSchema = new mongoose.Schema(
       type: String, // Stores unique OAuth provider ID
       default: null,
     },
+    lastSeen: {
+      type: Date,
+      default: null
+    },
   },
   { timestamps: true }
 );

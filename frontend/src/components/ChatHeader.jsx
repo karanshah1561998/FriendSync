@@ -1,13 +1,27 @@
 import { X } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 import { useChatStore } from "../store/useChatStore";
+import { formatTimeForDisplay } from "../lib/utils";
+import { useEffect } from "react";
 
 const ChatHeader = () => {
   const { selectedUser, setSelectedUser } = useChatStore();
-  const { onlineUsers, typingUsers } = useAuthStore();
+  const { onlineUsers, typingUsers, lastSeenUsers, getLastSeen } = useAuthStore();
+
+  useEffect(() => {
+    if (selectedUser && !onlineUsers.includes(selectedUser._id) && !lastSeenUsers[selectedUser._id]) {
+      getLastSeen(selectedUser._id);
+    }
+  }, [selectedUser, onlineUsers]);
 
   const isOnline = selectedUser ? onlineUsers.includes(selectedUser._id) : false;
   const isTyping = selectedUser ? Object.keys(typingUsers).includes(selectedUser._id) : false;
+  const lastSeen = lastSeenUsers[selectedUser._id];
+
+  let statusText = isOnline
+    ? (isTyping ? "Online | Typing..." : "Online")
+    : (lastSeen ? `Last seen: ${formatTimeForDisplay(lastSeen, "lastSeen")}` : "Offline");
+
 
   return (
     <div className="p-2.5 border-b border-base-300">
@@ -23,7 +37,7 @@ const ChatHeader = () => {
           <div>
             <h3 className="font-medium">{selectedUser.fullName}</h3>
             <p className="text-sm text-base-content/70">
-              {isOnline ? (isTyping ? "Online | Typing..." : "Online") : "Offline"}
+              {statusText}
             </p>
           </div>
         </div>

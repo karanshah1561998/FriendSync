@@ -4,7 +4,7 @@ import { useAuthStore } from "../store/useAuthStore";
 import ChatHeader from "./ChatHeader";
 import MessageInput from "./MessageInput";
 import MessageSkeleton from "./skeletons/MessageSkeleton";
-import { formatMessageTime, formatDateSeparator } from "../lib/utils";
+import { formatTimeForDisplay } from "../lib/utils";
 
 const ChatContainer = () => {
   const {
@@ -44,7 +44,7 @@ const ChatContainer = () => {
     );
   }
 
-  const topDate = messages.length > 0 ? formatDateSeparator(messages[0].createdAt) : "";
+  const topDate = messages.length > 0 ? formatTimeForDisplay(messages[0].createdAt, "separator") : "";
 
   return (
     <div className="flex-1 flex flex-col overflow-y-auto relative">
@@ -56,7 +56,7 @@ const ChatContainer = () => {
         </div>
       )}
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 overflow-y-auto p-2">
         {messages.map((message) => (
           <div key={message._id} id={`message-${message._id}`}>
             <div className={`chat ${message.senderId === authUser._id ? "chat-end" : "chat-start"}`} ref={messageEndRef}>
@@ -73,7 +73,7 @@ const ChatContainer = () => {
               </div>
               <div className="chat-header mb-1">
                 <time className="text-xs opacity-50 ml-1">
-                  {formatMessageTime(message.createdAt)}
+                  {formatTimeForDisplay(message.createdAt, "time")}
                 </time>
               </div>
               <div className="chat-bubble flex flex-col">
