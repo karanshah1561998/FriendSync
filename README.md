@@ -22,7 +22,7 @@ Access the live app here: [FriendSync](https://friendsync-8snh.onrender.com)
 ## ⚙️ Installation
 ### Prerequisites
 **Ensure you have the following installed:**
-- Node.js (v16+)
+- Node.js (v18+)
 - MongoDB (if using locally)
 
 ### Setup
