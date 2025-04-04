@@ -43,9 +43,9 @@ Access the live app here: [FriendSync](https://friendsync-8snh.onrender.com)
    Create a `.env` file in the friendsync/backend directory and add:
    ```bash
    # Common
-   PORT=5000
-   JWT_SECRET= your_jwt_secret
-   MONGO_URI= your_mongodb_uri
+   PORT = 5000
+   JWT_SECRET = your_jwt_secret
+   MONGO_URI = your_mongodb_uri
    NODE_ENV = development
    SESSION_SECRET = your_session_secret
 
@@ -70,7 +70,7 @@ Access the live app here: [FriendSync](https://friendsync-8snh.onrender.com)
    CLOUDINARY_API_KEY = key
    CLOUDINARY_API_SECRET = secret
 
-4. **Navigate to the frontend directory and start the backend server:**
+4. **Navigate to the backend directory and start the backend server:**
    ```bash
    cd friendsync/backend
    npm run dev
