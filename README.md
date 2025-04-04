@@ -80,6 +80,8 @@ Access the live app here: [FriendSync](https://friendsync-8snh.onrender.com)
    cd friendsync/frontend
    npm run dev
 
+   Open http://localhost:5173 to view the app in your browser.
+
 ## OAuth Setup
 
 ### GitHub OAuth
