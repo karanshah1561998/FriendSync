@@ -92,7 +92,7 @@ Access the live app here: [FriendSync](https://friendsync-8snh.onrender.com)
 
 ### Facebook OAuth
 1. Go to [Facebook Developer Console](https://developers.facebook.com/).
-2. Create an App and add **Facebook Login.
+2. Create an App and add Facebook Login.
 3. Configure Valid OAuth Redirect URIs: `http://localhost:5000/api/auth/facebook/callback`
 4. Set a valid Privacy Policy URL (e.g., `https://yourdomain.com/privacy-policy`).
 5. Copy App ID and App Secret to your `.env` file.
