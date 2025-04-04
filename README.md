@@ -1,13 +1,10 @@
-# FriendSync
-
-## Overview
+# 💬 FriendSync
 FriendSync is a real-time **chat application** that enables users to **authenticate** using **GitHub, Facebook, and Google OAuth**, manage their profile, and interact with their social connections securely. Users can **send messages**, and maintain an engaging conversation experience with friends.
 
-## Live Demo
-
+## 🚀 Live Demo
 Access the live app here: [FriendSync](https://friendsync-8snh.onrender.com)
 
-## Features
+## ✨ Features
 - **Real-Time Chat** (One-on-One)
 - **OAuth Authentication** using **GitHub, Facebook, and Google**
 - **User Profile Management**
@@ -15,16 +12,14 @@ Access the live app here: [FriendSync](https://friendsync-8snh.onrender.com)
 - **Secure User Sessions with JWT**
 - **Responsive UI** for Mobile & Desktop
 
-## Tech Stack
+## 🛠 Tech Stack
 - **Frontend:** React.js (Vite)
 - **Backend:** Node.js (Express.js)
 - **Database:** MongoDB (Atlas)
 - **Authentication:** OAuth (GitHub, Facebook, Google)
 - **Hosting:** Render
 
----
-
-## Installation
+## ⚙️ Installation
 ### Prerequisites
 Ensure you have the following installed:
 - **Node.js** (v16+)
@@ -45,12 +40,10 @@ Ensure you have the following installed:
    npm install
 
 3. **Set up environment variables:**
-
    Create a `.env` file in the friendsync/backend directory and add:
    ```bash
-   PORT=5000
-
    # Common
+   PORT=5000
    JWT_SECRET= your_jwt_secret
    MONGO_URI= your_mongodb_uri
    NODE_ENV = development
@@ -69,7 +62,7 @@ Ensure you have the following installed:
    GOOGLE_CLIENT_SECRET = your_google_client_secret
    
    # Backend & Frontend URLs
-   DEV_SERVER_URL = http://localhost:5055
+   DEV_SERVER_URL = http://localhost:5000
    DEV_CLIENT_URL = http://localhost:5173
 
    # Cloudinary Credentials
@@ -86,8 +79,6 @@ Ensure you have the following installed:
    ```bash
    cd friendsync/frontend
    npm run dev
-
----
 
 ## OAuth Setup
 
@@ -112,19 +103,7 @@ Ensure you have the following installed:
 3. Add **Authorized Redirect URIs**:  `http://localhost:5000/api/auth/google/callback`
 4. Copy **Client ID** and **Client Secret** to your `.env` file.
 
----
-
-## Deployment
-
-### Frontend & Backend (Render)
-1. Push your frontend code to GitHub.
-2. Connect your repository to **Render**.
-3. Set **environment variables** in Netlify settings.
-4. Deploy the project.
-
----
-
-## Troubleshooting
+## 🧩 Troubleshooting
 
 ### 1. Invalid Privacy Policy URL (Facebook)
 - Ensure the **Privacy Policy URL** is **publicly accessible**.
